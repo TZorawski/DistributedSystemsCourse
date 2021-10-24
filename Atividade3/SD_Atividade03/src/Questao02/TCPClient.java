@@ -1,3 +1,17 @@
+/**
+ * Descrição: Cliente TCP que se comunica com servidor de arquivos através de 
+ * protocolo binário. Opções de requisição:
+ *  - ADDFILE: envia um arquivo ao servidor.
+ *  - DELETE: remove um arquivo do servidor.
+ *  - GETFILESLIST: exibe a lista de arquivos do servidor.
+ *  - GETFILE: recebe um arquivo do servidor.
+ *  - EXIT: encerra a comunicação com o servidor.
+ * 
+ * Autores: Guilherme Vasco da Silva, Thais Zorawski
+ * Data da criação: 18/10/2021
+ * Data de atualização: 24/10/2021
+ */
+
 package Questao02;
 
 /**
@@ -5,8 +19,6 @@ package Questao02;
  *
  * Descricao: Faz solicitações ao servidor: ADDFILE, DELETE, GETFILESLIST e
  * GETFILE. Ao enviar EXIT, a conexão é finalizada.
- *
- * Autor: Thais Zorawski Data de criiação: 18/10/2021
  */
 import java.net.*;
 import java.io.*;

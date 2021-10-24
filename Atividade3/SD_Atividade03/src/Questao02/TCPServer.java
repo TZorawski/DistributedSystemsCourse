@@ -1,10 +1,22 @@
+/**
+ * Descrição: Servidor de arquivos TCP que se comunica com o cliente através de 
+ * protocolo binário. Opções de requisição do cliente:
+ *  - ADDFILE: envia um arquivo ao servidor.
+ *  - DELETE: remove um arquivo do servidor.
+ *  - GETFILESLIST: exibe a lista de arquivos do servidor.
+ *  - GETFILE: recebe um arquivo do servidor.
+ *  - EXIT: encerra a comunicação com o servidor.
+ * 
+ * Autores: Guilherme Vasco da Silva, Thais Zorawski
+ * Data da criação: 18/10/2021
+ * Data de atualização: 24/10/2021
+ */
+
 package Questao02;
 
 /**
  * TCPServer: Servidor para conexao TCP com Threads Descricao: Recebe uma
  * conexao, cria uma thread, recebe uma mensagem e finaliza a conexao.
- *
- * Autor: Thais Zorawski Data de criiação: 18/10/2021
  */
 import java.net.*;
 import java.io.*;
