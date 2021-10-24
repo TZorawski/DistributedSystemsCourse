@@ -10,28 +10,30 @@ import java.net.*;
 import java.io.*;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class TCPServer {
-
+static final Logger SERVER_LOGGER = Logger.getLogger(TCPServer.class.getName());
     public static void main(String args[]) {
         try {
-            int serverPort = 6666; // porta do servidor
+            int serverPort = 6666; // Server port
 
-            /* cria um socket e mapeia a porta para aguardar conexao */
+            /* Creates a socket and maps the port to wait for connection */
             ServerSocket listenSocket = new ServerSocket(serverPort);
 
             while (true) {
-                System.out.println("Servidor aguardando conexao ...");
+                SERVER_LOGGER.info("Server waiting for connection...");
 
-                /* aguarda conexoes */
+                /* Waiting for connections */
                 Socket clientSocket = listenSocket.accept();
 
-                System.out.println("Cliente conectado ... Criando thread ...");
+                SERVER_LOGGER.info("Client connected. Creating thread...");
 
-                /* cria um thread para atender a conexao */
+                /* Create a thread to service the connection */
                 ClientThread c = new ClientThread(clientSocket);
 
-                /* inicializa a thread */
+                /* Initialize the thread */
                 c.start();
             } //while
 
@@ -56,6 +58,9 @@ class ClientThread extends Thread {
     DataInputStream in;
     DataOutputStream out;
     Socket clientSocket;
+    
+    static final Logger CLIENT_LOGGER = Logger.getLogger(ClientThread.class.getName());
+
 
     /**
      * Constrói o cliente TCP que se comunica com o servidor através de um
@@ -65,11 +70,12 @@ class ClientThread extends Thread {
      */
     public ClientThread(Socket clientSocket) {
         try {
+            CLIENT_LOGGER.info("Client connected");
             this.clientSocket = clientSocket;
             in = new DataInputStream(clientSocket.getInputStream());
             out = new DataOutputStream(clientSocket.getOutputStream());
         } catch (IOException ioe) {
-            System.out.println("Connection:" + ioe.getMessage());
+            CLIENT_LOGGER.log(Level.SEVERE, "Connection: {0}", ioe.getMessage());
         } //catch
     } //construtor
 
@@ -82,7 +88,6 @@ class ClientThread extends Thread {
     public byte[] longToByteArray(long x) {
         ByteBuffer buffer = ByteBuffer.allocate(Long.BYTES);
         buffer.putLong(x);
-        byte[] ar = {buffer.get(0), buffer.get(1), buffer.get(2), buffer.get(3)};
         return buffer.array();
     }
 
@@ -102,6 +107,7 @@ class ClientThread extends Thread {
                 byte[] byteFilename;
                 String stringFilename;
 
+                // responseBytesArgs stores the response
                 ByteArrayOutputStream responseBytesArgs = new ByteArrayOutputStream();
                 responseBytesArgs.write((byte) 2);
 
@@ -109,12 +115,10 @@ class ClientThread extends Thread {
 
                 switch (requestBytesArgs[1]) {
                     case 1:
-                        System.out.println("ADDFILE");
+                        CLIENT_LOGGER.info("Executing ADDFILE");
                         responseBytesArgs.write((byte) 1);
 
                         in.read(byteFilenameLength);
-                        filenameLength = byteFilenameLength[0] & 0xFF;
-
                         in.read(byteFilenameLength);
                         filenameLength = byteFilenameLength[0] & 0xFF;
 
@@ -125,6 +129,7 @@ class ClientThread extends Thread {
                         long fileLength = in.readLong();
                         String pathFile = path + stringFilename;
 
+                        // Saves the content of file
                         try {
                             DataOutputStream outStream = new DataOutputStream(new FileOutputStream(pathFile));
 
@@ -143,10 +148,11 @@ class ClientThread extends Thread {
 
                             responseBytesArgs.write((byte) 2);
                             out.write(responseBytesArgs.toByteArray());
+                            CLIENT_LOGGER.log(Level.SEVERE, "Invalid file");
                         }
                         break;
                     case 2:
-                        System.out.println("DELETE");
+                        CLIENT_LOGGER.info("Executing DELETE");
                         responseBytesArgs.write((byte) 2);
 
                         in.read(byteFilenameLength);
@@ -158,22 +164,25 @@ class ClientThread extends Thread {
 
                         file = new File(path + stringFilename);
 
+                        // Deletes file
                         if (file.delete()) {
                             responseBytesArgs.write((byte) 1);
                             out.write(responseBytesArgs.toByteArray());
                         } else {
                             responseBytesArgs.write((byte) 2);
                             out.write(responseBytesArgs.toByteArray());
+                            CLIENT_LOGGER.log(Level.SEVERE, "Invalid file");
                         }
                         break;
                     case 3:
-                        System.out.println("GETFILESLIST");
+                        CLIENT_LOGGER.info("Executing GETFILESLIST");
                         responseBytesArgs.write((byte) 3);
                         responseBytesArgs.write((byte) 1);
                         responseBytesArgs.write((byte) files.length);
 
                         out.write(responseBytesArgs.toByteArray());
 
+                        // Lists server files
                         for (File f : files) {
                             ByteArrayOutputStream sendFile = new ByteArrayOutputStream();
 
@@ -185,7 +194,7 @@ class ClientThread extends Thread {
                         }
                         break;
                     case 4:
-                        System.out.println("GETFILE");
+                        CLIENT_LOGGER.info("Executing GETFILE");
                         responseBytesArgs.write((byte) 4);
 
                         in.read(byteFilenameLength);
@@ -197,6 +206,7 @@ class ClientThread extends Thread {
 
                         file = new File(path + stringFilename);
 
+                        // Sends file
                         if (file.isFile() && file.canRead()) {
                             InputStream inStream = new FileInputStream(file);
 
@@ -216,29 +226,33 @@ class ClientThread extends Thread {
                         } else {
                             responseBytesArgs.write((byte) 2);
                             out.write(responseBytesArgs.toByteArray());
+                            CLIENT_LOGGER.log(Level.SEVERE, "Invalid file.");
                         }
                         break;
                     case 5:
+                        // Stop option
                         stop = true;
                         break;
                     default:
+                        // Invalid option
                         stop = true;
-                        System.out.println("Error key");
+                        CLIENT_LOGGER.log(Level.SEVERE, "Invalid key");
                 }
             }
         } catch (EOFException eofe) {
-            System.out.println("EOF: " + eofe.getMessage());
+            CLIENT_LOGGER.log(Level.SEVERE, "EOF: {0}", eofe.getMessage());
         } catch (IOException ioe) {
-            System.out.println("IOE: " + ioe.getMessage());
+            CLIENT_LOGGER.log(Level.SEVERE, "IOE: {0}", ioe.getMessage());
         } finally {
             try {
+                // Closes communication
                 in.close();
                 out.close();
                 clientSocket.close();
             } catch (IOException ioe) {
-                System.err.println("IOE: " + ioe);
+                CLIENT_LOGGER.log(Level.SEVERE, "IOE: {0}", ioe);
             }
         }
-        System.out.println("Thread comunicação cliente finalizada.");
+        CLIENT_LOGGER.info("Communication with the client finished");
     } //run
 } //class

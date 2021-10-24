@@ -11,7 +11,6 @@ package Questao02;
 import java.net.*;
 import java.io.*;
 import java.nio.ByteBuffer;
-import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
 
 /**
@@ -27,15 +26,21 @@ public class TCPClient {
     /**
      * Helper que converte um valor long para uma lista de bytes.
      *
-     * @param x um valor long
+     * @param longBytes um valor long
      * @return array em bytes do valor long
      */
-    private static byte[] convertLongToByteArray(long x) {
+    private static byte[] convertLongToByteArray(long longBytes) {
         ByteBuffer buffer = ByteBuffer.allocate(Long.BYTES);
-        buffer.putLong(0, x);
+        buffer.putLong(0, longBytes);
         return buffer.array();
     }
 
+     /**
+     * Helper que converte uma lista de bytes para um valor long.
+     *
+     * @param longBytes um array em bytes do valor long
+     * @return valor long
+     */
     private static long convertByteArrayToLong(byte[] longBytes) {
         ByteBuffer byteBuffer = ByteBuffer.allocate(Long.BYTES);
         byteBuffer.put(longBytes);
@@ -44,34 +49,31 @@ public class TCPClient {
     }
 
     public static void main(String args[]) {
-        Socket clientSocket = null; // socket do cliente
-        Scanner reader = new Scanner(System.in); // ler mensagens via teclado
+        Socket clientSocket = null; // Client socket
+        Scanner reader = new Scanner(System.in); // Reads messages from keyboard
 
         try {
-            /* Endereço e porta do servidor */
-            int serverPort = 6666;
-            InetAddress serverAddr = InetAddress.getByName("127.0.0.1");
+            int serverPort = 6666; // Server port
+            InetAddress serverAddr = InetAddress.getByName("127.0.0.1"); // Server IP
 
-            /* conecta com o servidor */
-            clientSocket = new Socket(serverAddr, serverPort);
+            clientSocket = new Socket(serverAddr, serverPort); // Connects to the server
 
-            /* cria objetos de leitura e escrita */
+            /* Write and Read objects */
             DataInputStream in = new DataInputStream(clientSocket.getInputStream());
             DataOutputStream out = new DataOutputStream(clientSocket.getOutputStream());
 
-            /* protocolo de comunicação */
             String buffer = "";
             boolean stop = false;
             while (!stop) {
                 System.out.print(">>> ");
-                buffer = reader.nextLine(); // lê mensagem via teclado
+                buffer = reader.nextLine();
 
                 String[] stringArgs = buffer.split(" ");
                 ByteArrayOutputStream bytesArgs = new ByteArrayOutputStream();
 
                 bytesArgs.write((byte) 1);
 
-                String filename = new String();
+                String filename;
                 byte[] response;
                 switch (stringArgs[0]) {
                     case "ADDFILE":
@@ -81,8 +83,8 @@ public class TCPClient {
 
                         ByteArrayOutputStream teste = new ByteArrayOutputStream();
                         teste.write((byte) filename.length());
-//                        teste.write((byte[]) filename.getBytes());
 
+                        // Sends file
                         if (file.isFile() && file.canRead()) {
                             bytesArgs.write((byte) 1);
                             bytesArgs.write((byte) filename.length());
@@ -101,12 +103,12 @@ public class TCPClient {
                             in.read(response);
 
                             if (response[2] == 1) {
-                                System.out.println("SUCESSO");
+                                System.out.println("SUCCESS");
                             } else {
-                                System.out.println("ERRO");
+                                System.out.println("ERROR");
                             }
                         } else {
-                            System.out.println("Arquivo Inválido");
+                            System.out.println("Invalid file");
                         }
                         break;
                     case "DELETE":
@@ -122,9 +124,9 @@ public class TCPClient {
                         in.read(response);
 
                         if (response[2] == 1) {
-                            System.out.println("SUCESSO");
+                            System.out.println("SUCCESS");
                         } else {
-                            System.out.println("ERRO");
+                            System.out.println("ERROR");
                         }
                         break;
                     case "GETFILESLIST":
@@ -139,8 +141,9 @@ public class TCPClient {
                             byte[] number = new byte[1];
                             in.read(number);
 
-                            System.out.println("Total de Arquivos: " + number[0]);
+                            System.out.println("Total files: " + number[0]);
 
+                            // Shows files list
                             for (int i = 0; i < number[0]; i++) {
                                 byte filenameLength = in.readByte();
 
@@ -150,7 +153,7 @@ public class TCPClient {
                                 System.out.println("- " + filename);
                             }
                         } else {
-                            System.out.println("ERRO");
+                            System.out.println("ERROR");
                         }
                         break;
                     case "GETFILE":
@@ -168,6 +171,7 @@ public class TCPClient {
                         if (response[2] == 1) {
                             DataOutputStream outStream = new DataOutputStream(new FileOutputStream(path + filename));
 
+                            // Saves the content of file
                             try {
                                 byte[] byteFileLength = new byte[8];
                                 in.read(byteFileLength);
@@ -180,21 +184,23 @@ public class TCPClient {
                                     outStream.flush();
                                 }
                                 outStream.close();
-                                System.out.println("SUCESSO");
+                                System.out.println("SUCCESS");
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }
                         } else {
-                            System.out.println("ERRO");
+                            System.out.println("ERROR");
                         }
 
                         break;
                     case "EXIT":
+                        // Stop option
                         bytesArgs.write((byte) 5);
                         stop = true;
                         break;
                     default:
-                        System.out.println("Error key");
+                        // Invalid option
+                        System.out.println("Invalid key");
                         bytesArgs.write((byte) 5);
                 }
             }
@@ -206,6 +212,7 @@ public class TCPClient {
             System.out.println("IO:" + ioe.getMessage());
         } finally {
             try {
+                // Closes communication
                 clientSocket.close();
             } catch (IOException ioe) {
                 System.out.println("IO: " + ioe);;
