@@ -9,7 +9,7 @@ while(1):
 	comm = input('> ') #recebe entrada
 	parts = comm.split(' ', 1) #separa a entrada por ' '
 
-	#INSERT --RA,cod_disciplina,ano,semestre
+	#INSERT RA,cod_disciplina,ano,semestre
 	if parts[0] == 'INSERT': #comando insert
 		values = parts[1].split(',')
 		if len(values) != 4:
@@ -25,13 +25,13 @@ while(1):
 		tmp = sec.split(' ')
 		values = tmp[1].split(',')
 		
-		#UPDATE nota --RA,cod_disciplina,nota
+		#UPDATE nota RA,cod_disciplina,nota
 		if tmp[0] == 'nota' and len(values) == 3:
 			matricula.RA = int(values[0])
 			matricula.cod_disciplina = values[1]
 			matricula.nota = float(values[2])
 			
-		#UPDATE faltas --RA,cod_disciplina,faltas
+		#UPDATE faltas RA,cod_disciplina,faltas
 		elif tmp[0] == 'faltas' and len(values) == 3:
 			matricula.RA = int(values[0])
 			matricula.cod_disciplina = values[1]
@@ -45,13 +45,13 @@ while(1):
 		tmp = sec.split(' ')
 		values = tmp[1].split(',')
 		
-		#LIST alunos --cod_disciplina,ano,semestre
+		#LIST alunos cod_disciplina,ano,semestre
 		if tmp[0] == 'alunos' and len(values) == 3:
 			matricula.cod_disciplina = values[0]
 			matricula.ano = int(values[1])
 			matricula.semestre = int(values[2])
 		
-		#LIST all --RA,ano,semestre
+		#LIST all RA,ano,semestre
 		elif tmp[0] == 'all' and len(values) == 3:
 			matricula.RA = int(values[0])
 			matricula.ano = int(values[1])
