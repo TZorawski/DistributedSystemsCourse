@@ -10,16 +10,28 @@ package model;
  * @author thais
  */
 public class Disciplina {
-    private int codigo;
+
+    private String codigo;
     private String nome;
     private String professor;
     private int cod_curso;
 
-    public int getCodigo() {
+    public Disciplina() {
+        //
+    }
+    
+    public Disciplina(String codigo, String nome, String professor, int cod_curso) {
+        this.codigo = codigo;
+        this.nome = nome;
+        this.professor = professor;
+        this.cod_curso = cod_curso;
+    }
+
+    public String getCodigo() {
         return codigo;
     }
 
-    public void setCodigo(int codigo) {
+    public void setCodigo(String codigo) {
         this.codigo = codigo;
     }
 
@@ -46,4 +58,11 @@ public class Disciplina {
     public void setCod_curso(int cod_curso) {
         this.cod_curso = cod_curso;
     }
+
+    @Override
+    public String toString() {
+        return "Disciplina{" + "codigo=" + codigo + ", nome=" + nome + ", professor=" + professor + ", cod_curso=" + cod_curso + '}';
+    }
+    
+    
 }

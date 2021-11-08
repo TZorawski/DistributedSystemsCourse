@@ -16,6 +16,24 @@ public class Matricula {
     private int semestre;
     private float nota;
     private int faltas;
+    
+    public Matricula () {}
+
+    public Matricula(int RA, String cod_disciplina, int ano, int semestre) {
+        this.RA = RA;
+        this.cod_disciplina = cod_disciplina;
+        this.ano = ano;
+        this.semestre = semestre;
+    }
+
+    public Matricula(int RA, String cod_disciplina, int ano, int semestre, float nota, int faltas) {
+        this.RA = RA;
+        this.cod_disciplina = cod_disciplina;
+        this.ano = ano;
+        this.semestre = semestre;
+        this.nota = nota;
+        this.faltas = faltas;
+    }
 
     public int getRA() {
         return RA;
@@ -63,5 +81,10 @@ public class Matricula {
 
     public void setFaltas(int faltas) {
         this.faltas = faltas;
+    }
+
+    @Override
+    public String toString() {
+        return "Matricula{" + "RA=" + RA + ", cod_disciplina=" + cod_disciplina + ", ano=" + ano + ", semestre=" + semestre + ", nota=" + nota + ", faltas=" + faltas + '}';
     }
 }

@@ -4,6 +4,14 @@ public class Curso {
 
     private int codigo;
     private String nome;
+    
+    public Curso (){
+    }
+    
+    public Curso (int  codigo, String nome){
+        this.codigo = codigo;
+        this.nome = nome;
+    }
 
     public String getNome() {
         return nome;

@@ -14,6 +14,15 @@ public class Aluno {
     private String nome;
     private int periodo;
     private int cod_curso;
+    
+    public Aluno () {}
+    
+    public Aluno (int RA, String nome, int periodo, int cod_curso) {
+        this.RA = RA;
+        this.nome = nome;
+        this.periodo = periodo;
+        this.cod_curso = cod_curso;
+    }
 
     /**
      * @return the RA
@@ -69,6 +78,11 @@ public class Aluno {
      */
     public void setCod_curso(int cod_curso) {
         this.cod_curso = cod_curso;
+    }
+
+    @Override
+    public String toString() {
+        return "Aluno{" + "RA=" + RA + ", nome=" + nome + ", periodo=" + periodo + ", cod_curso=" + cod_curso + '}';
     }
     
 }
