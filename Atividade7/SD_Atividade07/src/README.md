@@ -29,6 +29,7 @@ São quatro tópicos possíveis disponibilizados no exemplo, todos ligados à Fo
 - verstappen
 - mercedes
 - redbull
+
 O arquivo client.py deve ser executado escolhendo um ou mais tópicos nessa lista:
 > - python client.py hamilton mercedes
 A seguir são executados o classifier e o collector:
