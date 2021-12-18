@@ -10,8 +10,7 @@ import sys
 
 def main():
     #Conexão com o RabbitMQ
-    connection = pika.BlockingConnection(
-        pika.ConnectionParameters(host='localhost'))
+    connection = pika.BlockingConnection(pika.ConnectionParameters(host='localhost'))
     #Criação do canal
     channel = connection.channel()
 
@@ -27,8 +26,7 @@ def main():
 
     #Verificação se o tópico é válido
     if not topicos:
-        print(
-            "Siga um dos tópicos: \n[verstappen] \n[hamilton] \n[bottas] \n[perez] \n[sainz] \n[norris] \n[leclerc] \n[ricciardo] \n[gasly] \n[alonso]", end="")
+        print("Siga um dos tópicos: \n[verstappen] \n[hamilton] \n[bottas] \n[perez] \n[sainz] \n[norris] \n[leclerc] \n[ricciardo] \n[gasly] \n[alonso]", end="")
         sys.exit(1)
 
     for i in range(len(topicos)):
