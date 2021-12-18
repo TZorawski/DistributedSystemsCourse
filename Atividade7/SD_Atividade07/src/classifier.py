@@ -25,14 +25,26 @@ def main():
             #Decodificação do tweet
             data = body.decode()
             #Verificação de palavras chave e apêndice ao vetor key
-            if 'hamilton' in data.lower():
-                key.append('hamilton')
             if 'verstappen' in data.lower():
                 key.append('verstappen')
-            if 'mercedes' in data.lower():
-                key.append('mercedes')
-            if 'redbull' in data.lower():
-                key.append('redbull')
+            if 'hamilton' in data.lower():
+                key.append('hamilton')
+            if 'bottas' in data.lower():
+                key.append('bottas')
+            if 'perez' in data.lower():
+                key.append('perez')
+            if 'sainz' in data.lower():
+                key.append('sainz')
+            if 'norris' in data.lower():
+                key.append('norris')
+            if 'leclerc' in data.lower():
+                key.append('leclerc')
+            if 'ricciardo' in data.lower():
+                key.append('ricciardo')
+            if 'gasly' in data.lower():
+                key.append('gasly')
+            if 'alonso' in data.lower():
+                key.append('alonso')
 
             #Impressão de confirmação
             print('Enviando log ao cliente.')

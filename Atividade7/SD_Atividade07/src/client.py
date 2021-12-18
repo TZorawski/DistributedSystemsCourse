@@ -22,19 +22,18 @@ def main():
     queue_name = result.method.queue
 
     #Lista de topicos que podem ser selecionados
-    filas = ["hamilton", "verstappen", "mercedes", "redbull"]
+    filas = ["verstappen", "hamilton", "bottas", "perez", "sainz", "norris", "leclerc", "ricciardo", "gasly", "alonso"]
     topicos = sys.argv[1:]
 
     #Verificação se o tópico é válido
     if not topicos:
         print(
-            "Siga um dos tópicos: [hamilton] [verstappen] [mercedes] [redbull]", end="")
+            "Siga um dos tópicos: \n[verstappen] \n[hamilton] \n[bottas] \n[perez] \n[sainz] \n[norris] \n[leclerc] \n[ricciardo] \n[gasly] \n[alonso]", end="")
         sys.exit(1)
 
     for i in range(len(topicos)):
         if topicos[i] not in filas:
-            print(
-                "Siga um dos tópicos : [hamilton] [verstappen] [mercedes] [redbull]", end="")
+            print("Siga um dos tópicos: \n[verstappen] \n[hamilton] \n[bottas] \n[perez] \n[sainz] \n[norris] \n[leclerc] \n[ricciardo] \n[gasly] \n[alonso]", end="")
             sys.exit(1)
 
     #Cria a fila

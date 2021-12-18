@@ -19,8 +19,8 @@ def main():
     auth.set_access_token(tokens[2], tokens[3])
     #Autenticação pela API
     api = tweepy.API(auth)
-    #Pesquisa por "formula um" no Twitter
-    public_tweets = api.search_tweets(q='formula um',result_type='mixed',count=100)
+    #Pesquisa por "formula 1" no Twitter
+    public_tweets = api.search_tweets(q='formula 1',result_type='mixed',count=100)
 
     #Conexão com o RabbitMQ
     connection = pika.BlockingConnection(
